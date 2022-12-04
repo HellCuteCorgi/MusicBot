@@ -1,0 +1,3 @@
+#5682494761:AAFX-yI9-wOhzBIAhmwxSQrM4Q5psfke0PM - API token
+
+Token = '5682494761:AAFX-yI9-wOhzBIAhmwxSQrM4Q5psfke0PM'
