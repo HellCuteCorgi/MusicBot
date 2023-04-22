@@ -16,8 +16,8 @@ def start(message):
    Find = types.KeyboardButton('🎧 Найти песню или трек')
    Help = types.KeyboardButton('💬 Помощь')
    Information = types.KeyboardButton('📃 Информация')
-
    markup.add(Hello, Find, Help, Information)
+
 
    bot.send_message(message.chat.id, 'Привет, {0.first_name}'.format(message.from_user), reply_markup = markup)
 
@@ -30,6 +30,7 @@ def help(message):
     Back = types.KeyboardButton('⬅ Назад')
     markup.add(InfAb, Write, Back)
 
+
     bot.send_message(message.chat.id, 'Здесь Вы можете узнать всю информацию и если что, написать разработчику', reply_markup=markup)
 
 #Кнопки для реализации поиска песен и треков.
@@ -39,27 +40,11 @@ def find(message):
     FindMus = types.KeyboardButton(' Найти песню по названию')
     RecordMus = types.KeyboardButton(' Ну если не по названию, хоть звук запишем, тыкай на микрофон')
     Back = types.KeyboardButton('⬅ Назад')
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=False)
     markup.add(FindMus, RecordMus, Back)
 
-    bot.send_message(message.chat.id, 'Меню:', reply_markup=markup)
 
-# def search_music_by_name(name):
-#     search_url = "https://api.deezer.com/search"
-#     params = {
-#         "q": name,
-#         "limit": 1,
-#         "output": "json",
-#     }
-#     response = requests.get(search_url, params=params)
-#     if response.status_code == 200:
-#         data = json.loads(response.text)
-#         if "data" in data and len(data["data"]) > 0:
-#             track = data["data"][0]
-#             title = track["title"]
-#             artist = track["artist"]["name"]
-#             preview_url = track["preview"]
-#             return {"title": title, "artist": artist, "preview_url": preview_url}
-#     return None
+    bot.send_message(message.chat.id, 'Меню:', reply_markup=markup)
 
 @bot.message_handler(func=lambda message: message.text == 'Найти песню по названию')
 def find_music_by_name(message):
@@ -89,6 +74,7 @@ def informationbot(message):
     Back = types.KeyboardButton('⬅ Назад')
     markup.add(Inf, PatchNote, Back)
 
+
     bot.send_message(message.chat.id, 'Информация о боте и обновлениях: ', reply_markup=markup)
 
 #Оформление связи с разработчиком.
@@ -97,11 +83,13 @@ def contact(message):
     markup = types.InlineKeyboardMarkup()
     buttoncont = types.InlineKeyboardButton('Оформи баг репорт:', url='https://t.me/HellCuteCorgi')
     markup.add(buttoncont)
+
+
     bot.send_message(message.chat.id,'Тыкай сюда и расскажи о проблемах)'.format(message.from_user), reply_markup=markup)
 
 @bot.message_handler(command = ['patchnote'])
 def patchnote(message):
-    bot.send_message(message.chat.id, 'Version 1.0 \n - Обновлений пока нет')
+    bot.send_message(message.chat.id, 'Version 1.1 \n - Добавлен поиск песен по названию')
 
 #Реализация работы кнопок, ответов.
 @bot.message_handler(content_types=['text'])
@@ -116,6 +104,7 @@ def bot_message(message):
                 Back = types.KeyboardButton('⬅ Назад')
                 markup.add(FindMus, RecordMus, Back)
 
+
                 bot.send_message(message.chat.id, 'Меню:', reply_markup=markup)
 
         elif message.text == '💬 Помощь':
@@ -124,6 +113,7 @@ def bot_message(message):
                 Write = types.KeyboardButton('🔧 Баг репорт')
                 Back = types.KeyboardButton('⬅ Назад')
                 markup.add(InfAb, Write, Back)
+
 
                 bot.send_message(message.chat.id, 'Здесь Вы можете узнать всю информацию', reply_markup=markup)
 
@@ -134,6 +124,7 @@ def bot_message(message):
                 Back = types.KeyboardButton('⬅ Назад')
                 markup.add(Inf, PatchNote, Back)
 
+
                 bot.send_message(message.chat.id, 'Информация о боте и обновлениях: ', reply_markup=markup)
 
         elif message.text == '⬅ Назад':
@@ -142,8 +133,8 @@ def bot_message(message):
                 Find = types.KeyboardButton('🎧 Найти песню или трек')
                 Help = types.KeyboardButton('💬 Помощь')
                 Information = types.KeyboardButton('📃 Информация')
-
                 markup.add(Hello, Find, Help, Information)
+
 
                 bot.send_message(message.chat.id, 'Главное меню', reply_markup=markup)
 
@@ -155,12 +146,13 @@ def bot_message(message):
             buttoncont = types.InlineKeyboardButton('Оформи баг репорт:', url='https://t.me/HellCuteCorgi')
             markup.add(buttoncont)
 
+
             bot.send_message(message.chat.id, 'Тыкай сюда и расскажи о проблемах)'.format(message.from_user), reply_markup=markup)
 
         elif message.text == '💻 Информация о разработке и будущих обновлениях':
-            bot.send_message(message.chat.id, 'Version 1.0 \n - Дата создания бота: 02.12.2022 \n - Разработчик: @HellCuteCorgi \n - Основное предназначение: Помощь пользователям в поиске песен и треков, используя их названия \n - Анонс будущей версии: \n 1. В будущем будет добавлена возможность поиска песен при помощи записи через микрофон. \n 2. Также бот будет присылать гифки и фоточки котиков из интернета по нажатию кнопки. \n 3. И последнее поиск музыки на вики по названию')
+            bot.send_message(message.chat.id, 'Version 1.1 \n - Дата создания бота: 02.12.2022 \n - Разработчик: @HellCuteCorgi \n - Основное предназначение: Помощь пользователям в поиске песен и треков, используя их названия \n - Анонс будущей версии: \n 1. В будущем будет добавлена возможность поиска песен при помощи записи через микрофон. \n 2. Также бот будет присылать гифки и фоточки котиков из интернета по нажатию кнопки. \n 3. И последнее поиск музыки на вики по названию')
 
         elif message.text == '📝 Патч нот обновлений бота':
-            bot.send_message(message.chat.id, 'Version 1.0 \n - Обновлений пока нет')
+            bot.send_message(message.chat.id, 'Version 1.1 \n - Добавлен поиск музыки по названию')
 
 bot.polling(none_stop = True)
