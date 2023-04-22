@@ -1,7 +1,11 @@
 import telebot
 from telebot import types
 import config
+import deezer
+import json
+import requests
 
+client = deezer.Client(app_id='598904', app_secret='2a8c1faffcb9590bf1c67a51712f447b')
 bot = telebot.TeleBot(config.Token)
 
 #Кнопки для начала работы с ботом и создания главного меню.
@@ -38,6 +42,43 @@ def find(message):
     markup.add(FindMus, RecordMus, Back)
 
     bot.send_message(message.chat.id, 'Меню:', reply_markup=markup)
+
+# def search_music_by_name(name):
+#     search_url = "https://api.deezer.com/search"
+#     params = {
+#         "q": name,
+#         "limit": 1,
+#         "output": "json",
+#     }
+#     response = requests.get(search_url, params=params)
+#     if response.status_code == 200:
+#         data = json.loads(response.text)
+#         if "data" in data and len(data["data"]) > 0:
+#             track = data["data"][0]
+#             title = track["title"]
+#             artist = track["artist"]["name"]
+#             preview_url = track["preview"]
+#             return {"title": title, "artist": artist, "preview_url": preview_url}
+#     return None
+
+@bot.message_handler(func=lambda message: message.text == 'Найти песню по названию')
+def find_music_by_name(message):
+    bot.send_message(message.chat.id, 'Введите название песни, которую хотите найти:')
+    bot.register_next_step_handler(message, search_music_by_name)
+
+def search_music_by_name(message):
+    song_name = message.text
+    response = requests.get(f'https://api.deezer.com/search?q={song_name}&limit=1')
+    data = response.json()
+    if 'data' in data:
+        track = data['data'][0]
+        artist = track['artist']['name']
+        title = track['title']
+        audio_url = track['preview']
+        bot.send_message(message.chat.id, f'Нашел песню "{title}" исполнителя {artist}. Отправляю...')
+        bot.send_audio(message.chat.id, audio=audio_url)
+    else:
+        bot.send_message(message.chat.id, 'По вашему запросу ничего не найдено')
 
 #Кнопки для получения инфорации.
 @bot.message_handler(commands = ['information'])
@@ -89,7 +130,7 @@ def bot_message(message):
         elif message.text == '📃 Информация':
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
                 Inf = types.KeyboardButton('💻 Информация о разработке и будущих обновлениях')
-                PatchNote = types.KeyboardButton('📝 Патч нот обновлений бота')
+                PatchNote = types.KeyboardButton('📝 Патч ноут обновлений бота')
                 Back = types.KeyboardButton('⬅ Назад')
                 markup.add(Inf, PatchNote, Back)
 
